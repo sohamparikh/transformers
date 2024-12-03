@@ -343,10 +343,14 @@ class OlmoeAttention(nn.Module):
         self.k_proj = nn.Linear(self.hidden_size, self.num_key_value_heads * self.head_dim, bias=config.attention_bias)
         self.v_proj = nn.Linear(self.hidden_size, self.num_key_value_heads * self.head_dim, bias=config.attention_bias)
         self.o_proj = nn.Linear(self.hidden_size, self.hidden_size, bias=config.attention_bias)
-        self.q_norm = OlmoeRMSNorm(self.hidden_size, eps=config.rms_norm_eps)
-        self.k_norm = OlmoeRMSNorm(
-            (self.hidden_size // self.num_heads) * self.num_key_value_heads, eps=config.rms_norm_eps
-        )
+        if config.qk_norm:
+            self.q_norm = OlmoeRMSNorm(self.hidden_size, eps=config.rms_norm_eps)
+            self.k_norm = OlmoeRMSNorm(
+                (self.hidden_size // self.num_heads) * self.num_key_value_heads, eps=config.rms_norm_eps
+            )
+        else:
+            self.q_norm = nn.Identity()
+            self.k_norm = nn.Identity()
 
     def forward(
         self,

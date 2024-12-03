@@ -92,6 +92,8 @@ class OlmoeConfig(PretrainedConfig):
             The aux loss factor for the total loss.
         norm_topk_prob (`bool`, *optional*, defaults to `False`):
             Whether to normalize the topk probabilities.
+        qk_norm (`bool`, *optional*, defaults to `False`):
+            Whether to normalize the query and key projections.
 
     ```python
     >>> from transformers import OlmoeModel, OlmoeConfig
@@ -136,6 +138,7 @@ class OlmoeConfig(PretrainedConfig):
         output_router_logits=False,
         router_aux_loss_coef=0.01,
         norm_topk_prob=False,
+        qk_norm=False,
         **kwargs,
     ):
         self.vocab_size = vocab_size
@@ -164,6 +167,7 @@ class OlmoeConfig(PretrainedConfig):
         self.output_router_logits = output_router_logits
         self.router_aux_loss_coef = router_aux_loss_coef
         self.norm_topk_prob = norm_topk_prob
+        self.qk_norm = qk_norm
         # Validate the correctness of rotary position embeddings parameters
         # BC: if there is a 'type' field, move it to 'rope_type'.
         if self.rope_scaling is not None and "type" in self.rope_scaling:
